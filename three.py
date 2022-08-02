@@ -1,12 +1,7 @@
 import pymysql as sql
+import environment as envir
 
-host = "127.0.0.1"
-port = 3306
-user = "root"
-password = ""
-database = "电竞经理"
-
-connect = sql.connect(host = host, port = 3306, user = user, password = password, database = database)
+connect = sql.connect(host = envir.host, port = envir.port, user = envir.user, password = envir.password, database = envir.database)
 
 cursor = connect.cursor()
 

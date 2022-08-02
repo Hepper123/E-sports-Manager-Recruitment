@@ -1,24 +1,11 @@
 import pymysql as sql
+import environment as envir
 
-host = "127.0.0.1"
-port = 3306
-user = "root"
-password = ""
-database = "电竞经理"
-
-connect = sql.connect(host = host, port = 3306, user = user, password = password, database = database)
+connect = sql.connect(host = envir.host, port = envir.port, user = envir.user, password = envir.password, database = envir.database)
 
 cursor = connect.cursor()
 
 def two_a():
-    position = ["上路", "打野", "中路", "下路", "辅助"]
-    print("1.上路 2.打野 3.中路 4.下路 5.辅助")
-    p_1 = int(input("选择分路1:"))
-    p_2 = int(input("选择分路2:"))
-    position_a = []
-    position_a.append(position[p_1 - 1])
-    position_a.append(position[p_2 - 1])
-    
     print("1.华中 2.华东 3.华南 4.华北 5.西南 6.东北 7.外援")
     l = int(input("选择地区："))
     if(l == 1):
@@ -38,29 +25,38 @@ def two_a():
     else:
         exit()
 
+    team = ["EDG", "RNG", "JDG", "FPX", "V5", "RA", "IG", "AL", "BLG", "LNG", "TES", "OMG", "WE", "WBG", "UP", "TT"]
+    print("1.EDG 2.RNG 3.JDG 4.FPX 5.V5 6.RA 7.IG 8.AL 9.BLG 10.LNG 11.TES 12.OMG 13.WE 14.WBG 15.UP 16.TT")
+    t1 = int(input("选择team1:"))
+    t2 = int(input("选择team2:"))
+    t3 = int(input("选择team3:"))
+    t4 = int(input("选择team4:"))
+
+    team_a = []
+    team_a.append(team[t1 - 1])
+    team_a.append(team[t2 - 1])
+    team_a.append(team[t3 - 1])
+    team_a.append(team[t4 - 1])
+
     tag_1 = ["直播天才", "经验丰富", "上分机器", "排位王者"]
     print("1.直播天才 2.经验丰富 3.上分机器 4.排位王者")
-    ta1_1 = int(input("选择第一个tag1:"))
-    ta1_2 = int(input("选择第二个tag1:"))
+    ta1 = int(input("选择第一个tag1:"))
+    ta2 = int(input("选择第二个tag1:"))
 
 
     tag_2 = ["大心脏", "操作", "状态", "头脑", "训练态度", "节目效果", "流量"]
     print("1.大心脏 2.操作 3.状态 4.头脑 5.训练态度 6.节目效果 7.流量")
-    ta2_1 = int(input("选择第一个tag2:"))
-    ta2_2 = int(input("选择第二个tag2:"))
-    ta2_3 = int(input("选择第三个tag2:"))
+    ta3 = int(input("选择tag2:"))
 
     tag_a = []
-    tag_a.append(tag_1[ta1_1 - 1])
-    tag_a.append(tag_1[ta1_2 - 1])
-    tag_a.append(tag_2[ta2_1 - 1])
-    tag_a.append(tag_2[ta2_2 - 1])
-    tag_a.append(tag_2[ta2_3 - 1])
+    tag_a.append(tag_1[ta1 - 1])
+    tag_a.append(tag_2[ta2 - 1])
+    tag_a.append(tag_2[ta3 - 1])
 
-    # 位置+地区+tag
-    for p, ta in zip(position_a, tag_a):
-        sql = "select * from 招聘 where position = %s and location = %s and (tag1 = %s or tag2 = %s)"
-        cursor.execute(sql, (p, location, ta, ta))
+    # 地区+战队+tag
+    for t, ta in zip(team_a, tag_a):
+        sql = "select * from 招聘 where location = %s and team = %s and (tag1 = %s or tag2 = %s)"
+        cursor.execute(sql, (location, t, ta, ta))
         result = cursor.fetchall()
         for row in result:
             name = row[1]
@@ -68,23 +64,11 @@ def two_a():
                 SSR = "SSR"
             else:
                 SSR = "SR"
-            print("name = %s, position = %s, location = %s, tag = %s, %s"%(name, p, location, ta, SSR))
-    # 位置+2tag
-    for p, ta_1, ta_2 in zip(position_a, tag_a[0:2], tag_a[2:5]):
-        sql = "select * from 招聘 where position = %s and tag1 = %s and tag2 = %s"
-        cursor.execute(sql, (p, ta_1, ta_2))
-        result = cursor.fetchall()
-        for row in result:
-            name = row[1]
-            if(row[6]):
-                SSR = "SSR"
-            else:
-                SSR = "SR"
-            print("name = %s, position = %s, tag1 = %s, tag2 = %s, %s"%(name, p, ta_1, ta_2, SSR))
+            print("name = %s, location = %s, team = %s, tag = %s, %s"%(name, location, t, ta, SSR))
     # 地区+2tag
-    for ta_1, ta_2 in zip(tag_a[0:2], tag_a[2:5]):
+    for ta_1 in tag_a[0:2]:
         sql = "select * from 招聘 where location = %s and tag1 = %s and tag2 = %s"
-        cursor.execute(sql, (location, ta_1, ta_2))
+        cursor.execute(sql, (location, ta_1, tag_a[2]))
         result = cursor.fetchall()
         for row in result:
             name = row[1]
@@ -92,4 +76,16 @@ def two_a():
                 SSR = "SSR"
             else:
                 SSR = "SR"
-            print("name = %s, location = %s, tag1 = %s, tag2 = %s, %s"%(name, location, ta_1, ta_2, SSR))
+            print("name = %s, location = %s, tag1 = %s, tag2 = %s, %s"%(name, location, ta_1, tag_a[2], SSR))
+    # 战队+2tag
+    for t, ta_1 in zip(team_a, tag_a[0:2]):
+        sql = "select * from 招聘 where team = %s and tag1 = %s and tag2 = %s"
+        cursor.execute(sql, (t, ta_1, tag_a[2]))
+        result = cursor.fetchall()
+        for row in result:
+            name = row[1]
+            if(row[6]):
+                SSR = "SSR"
+            else:
+                SSR = "SR"
+            print("name = %s, team = %s, tag1 = %s, tag2 = %s, %s"%(name, t, ta_1, tag_a[2], SSR))
