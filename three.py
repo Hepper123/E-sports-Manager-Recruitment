@@ -38,8 +38,8 @@ def three_a():
     team_a.append(team[t3 - 1])
     team_a.append(team[t4 - 1])
 
-    tag_2 = ["大心脏", "操作", "状态", "头脑", "训练态度", "节目效果", "流量"]
-    print("1.大心脏 2.操作 3.状态 4.头脑 5.训练态度 6.节目效果 7.流量")
+    tag_2 = ["大心脏", "操作", "状态", "头脑", "训练态度", "节目效果", "高光"]
+    print("1.大心脏 2.操作 3.状态 4.头脑 5.训练态度 6.节目效果 7.高光")
     ta1 = int(input("选择tag1:"))
     ta2 = int(input("选择tag2:"))
     ta3 = int(input("选择tag3:"))
@@ -50,14 +50,18 @@ def three_a():
     tag_a.append(tag_2[ta3 - 1])
 
     # 地区+战队+tag
-    for t, ta in zip(team_a, tag_a):
-        sql = "select * from 招聘 where location = %s and team = %s and tag2 = %s"
-        cursor.execute(sql, (location, t, ta))
-        result = cursor.fetchall()
-        for row in result:
-            name = row[1]
-            if(row[6]):
-                SSR = "SSR"
-            else:
-                SSR = "SR"
-            print("name = %s, location = %s, team = %s, tag = %s, %s"%(name, location, t, ta, SSR))
+    for t in team_a:
+        for ta in tag_a:
+            sql = "select * from 招聘 where location = %s and team = %s and tag2 = %s"
+            cursor.execute(sql, (location, t, ta))
+            result = cursor.fetchall()
+            for row in result:
+                name = row[1]
+                if(row[6]):
+                    SSR = "SSR"
+                else:
+                    SSR = "SR"
+                print("name = %s, location = %s, team = %s, tag = %s, %s"%(name, location, t, ta, SSR))
+
+if __name__ == "__main__":
+    three_a()

@@ -39,8 +39,8 @@ def four_a():
     ta1_2 = int(input("选择第二个tag1:"))
 
 
-    tag_2 = ["大心脏", "操作", "状态", "头脑", "训练态度", "节目效果", "流量"]
-    print("1.大心脏 2.操作 3.状态 4.头脑 5.训练态度 6.节目效果 7.流量")
+    tag_2 = ["大心脏", "操作", "状态", "头脑", "训练态度", "节目效果", "高光"]
+    print("1.大心脏 2.操作 3.状态 4.头脑 5.训练态度 6.节目效果 7.高光")
     ta2_1 = int(input("选择第一个tag2:"))
     ta2_2 = int(input("选择第二个tag2:"))
     ta2_3 = int(input("选择第三个tag2:"))
@@ -53,38 +53,45 @@ def four_a():
     tag_a.append(tag_2[ta2_3 - 1])
 
     # 位置+地区+tag
-    for p, ta in zip(position_a, tag_a):
-        sql = "select * from 招聘 where position = %s and location = %s and (tag1 = %s or tag2 = %s)"
-        cursor.execute(sql, (p, location, ta, ta))
-        result = cursor.fetchall()
-        for row in result:
-            name = row[1]
-            if(row[6]):
-                SSR = "SSR"
-            else:
-                SSR = "SR"
-            print("name = %s, position = %s, location = %s, tag = %s, %s"%(name, p, location, ta, SSR))
+    for p in position_a:
+        for ta in tag_a:
+            sql = "select * from 招聘 where position = %s and location = %s and (tag1 = %s or tag2 = %s)"
+            cursor.execute(sql, (p, location, ta, ta))
+            result = cursor.fetchall()
+            for row in result:
+                name = row[1]
+                if(row[6]):
+                    SSR = "SSR"
+                else:
+                    SSR = "SR"
+                print("name = %s, position = %s, location = %s, tag = %s, %s"%(name, p, location, ta, SSR))
     # 位置+2tag
-    for p, ta_1, ta_2 in zip(position_a, tag_a[0:2], tag_a[2:5]):
-        sql = "select * from 招聘 where position = %s and tag1 = %s and tag2 = %s"
-        cursor.execute(sql, (p, ta_1, ta_2))
-        result = cursor.fetchall()
-        for row in result:
-            name = row[1]
-            if(row[6]):
-                SSR = "SSR"
-            else:
-                SSR = "SR"
-            print("name = %s, position = %s, tag1 = %s, tag2 = %s, %s"%(name, p, ta_1, ta_2, SSR))
+    for p in position_a:
+        for ta_1 in tag_a[0:2]:
+            for ta_2 in tag_a[2:5]:
+                sql = "select * from 招聘 where position = %s and tag1 = %s and tag2 = %s"
+                cursor.execute(sql, (p, ta_1, ta_2))
+                result = cursor.fetchall()
+                for row in result:
+                    name = row[1]
+                    if(row[6]):
+                        SSR = "SSR"
+                    else:
+                        SSR = "SR"
+                    print("name = %s, position = %s, tag1 = %s, tag2 = %s, %s"%(name, p, ta_1, ta_2, SSR))
     # 地区+2tag
-    for ta_1, ta_2 in zip(tag_a[0:2], tag_a[2:5]):
-        sql = "select * from 招聘 where location = %s and tag1 = %s and tag2 = %s"
-        cursor.execute(sql, (location, ta_1, ta_2))
-        result = cursor.fetchall()
-        for row in result:
-            name = row[1]
-            if(row[6]):
-                SSR = "SSR"
-            else:
-                SSR = "SR"
-            print("name = %s, location = %s, tag1 = %s, tag2 = %s, %s"%(name, location, ta_1, ta_2, SSR))
+    for ta_1 in tag_a[0:2]:
+        for ta_2 in tag_a[2:5]:
+            sql = "select * from 招聘 where location = %s and tag1 = %s and tag2 = %s"
+            cursor.execute(sql, (location, ta_1, ta_2))
+            result = cursor.fetchall()
+            for row in result:
+                name = row[1]
+                if(row[6]):
+                    SSR = "SSR"
+                else:
+                    SSR = "SR"
+                print("name = %s, location = %s, tag1 = %s, tag2 = %s, %s"%(name, location, ta_1, ta_2, SSR))
+
+if __name__ == "__main__":
+    four_a()
